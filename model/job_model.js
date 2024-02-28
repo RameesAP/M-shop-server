@@ -22,7 +22,7 @@ const JobSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
-    modelnumber: {
+    model: {
       type: String,
       require: true,
     },
@@ -30,6 +30,32 @@ const JobSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
+    condition: {
+      type: String,
+      require: true,
+    },
+    place: {
+      type: String,
+      require: true,
+    },
+    ime: {
+      type: String,
+      require: true,
+    },
+    deliveryOption: {
+      type: String,
+      enum: ["direct", "courier"], // Enumerated values for delivery options
+      required: true,
+    },
+    password: {
+      type: String,
+      require: true,
+    },
+    remark: {
+      type: String,
+      require: true,
+    },
+
     status: {
       type: String,
       default: "pending",
