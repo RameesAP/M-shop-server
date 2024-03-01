@@ -15,3 +15,12 @@ export const createJob = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getAllData = async (req, res, next) => {
+  try {
+    const getAll = await JobModel.find().sort({ createdAt: -1 });
+    res.status(200).json(getAll);
+  } catch (error) {
+    next(error);
+  }
+};
