@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const JobSchema = new mongoose.Schema(
   {
+    jobsheetno: {
+      type: Number,
+      unique: true,
+    },
     username: {
       type: String,
       require: true,
@@ -58,11 +62,39 @@ const JobSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      default: "pending",
+      default: "new",
+    },
+    jobsheetno: {
+      type: Number,
+      unique: true,
     },
   },
   { timestamps: true }
 );
+
+// Define a pre-save middleware to auto-increment jobsheetno
+JobSchema.pre("save", async function (next) {
+  try {
+    if (!this.isNew) {
+      // If the document is not new, do not increment jobsheetno
+      return next();
+    }
+
+    // Find the highest existing jobsheetno
+    const highestJobSheetNo = await this.constructor.findOne(
+      {},
+      { jobsheetno: 1 },
+      { sort: { jobsheetno: -1 } }
+    );
+
+    // Set the jobsheetno for the new document
+    this.jobsheetno = highestJobSheetNo ? highestJobSheetNo.jobsheetno + 1 : 1;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 const JobModel = mongoose.model("Job", JobSchema);
 
