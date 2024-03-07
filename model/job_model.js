@@ -68,6 +68,14 @@ const JobSchema = new mongoose.Schema(
       type: Number,
       unique: true,
     },
+    price: {
+      type: Number,
+      require: true,
+    },
+    technician_name: {
+      type: String,
+      require: true,
+    },
   },
   { timestamps: true }
 );

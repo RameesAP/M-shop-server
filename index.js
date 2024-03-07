@@ -13,10 +13,12 @@ app.use(cookieParser());
 // import routes
 import userRoutes from "./routes/user_route.js";
 import authRoutes from "./routes/auth_router.js";
+import technicianRoutes from "./routes/technician_route.js";
 
 //use of routes
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/technician", technicianRoutes);
 
 //middleware
 
