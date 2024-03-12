@@ -70,11 +70,11 @@ const JobSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      require: true,
+     
     },
     technician_name: {
       type: String,
-      require: true,
+     
     },
   },
   { timestamps: true }
