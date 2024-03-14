@@ -122,12 +122,22 @@ export const getInvoice = async (req, res, next) => {
     if (!itemTofind) {
       return res.status(404).json({ error: "Item not found" });
     }
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.getDate()}/${
+      currentDate.getMonth() + 1
+    }/${currentDate.getFullYear()}`;
     // Your logic to fetch invoice data based on the provided ID
     const invoiceData = {
       // ... fetch invoice data based on req.params.id
       customerName: itemTofind?.username,
       customerAddress: itemTofind?.address,
-      customeroOrderNo: itemTofind?.jobsheetno,
+      customerOrderNo: itemTofind?.jobsheetno,
+      customerNumber: itemTofind?.number,
+      customerBrand: itemTofind?.brand,
+      customerModel: itemTofind?.model,
+      customerCategory: itemTofind?.category,
+      customerPrice: itemTofind?.price,
+      currentdate: formattedDate,
     };
 
     // Replace the following HTML content with your actual invoice template
@@ -231,8 +241,8 @@ export const getInvoice = async (req, res, next) => {
                         </tr>
                         <tr>
                           <td style="font-size: 12px; color: #5b5b5b; font-family: 'Open Sans', sans-serif; line-height: 18px; vertical-align: top; text-align: right;">
-                            <small>ORDER : </small>${invoiceData.customeroOrderNo}<br />
-                            <small>MARCH 4TH 2016</small>
+                            <small>ORDER : </small>${invoiceData.customerOrderNo}<br />
+                            <small>DATE : ${formattedDate}</small>
                           </td>
                         </tr>
                       </tbody>
@@ -271,10 +281,10 @@ export const getInvoice = async (req, res, next) => {
                         Item
                       </th>
                       <th style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #5b5b5b; font-weight: normal; line-height: 1; vertical-align: top; padding: 0 0 7px;" align="left">
-                        <small>SKU</small>
+                        <small>Brand</small>
                       </th>
                       <th style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #5b5b5b; font-weight: normal; line-height: 1; vertical-align: top; padding: 0 0 7px;" align="center">
-                        Quantity
+                        Category
                       </th>
                       <th style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #1e2b33; font-weight: normal; line-height: 1; vertical-align: top; padding: 0 0 7px;" align="right">
                         Subtotal
@@ -287,25 +297,21 @@ export const getInvoice = async (req, res, next) => {
                       <td height="10" colspan="4"></td>
                     </tr>
                     <tr>
+                    <td height="1" colspan="4" style="border-bottom:1px solid #e4e4e4"></td>
+                  </tr>
+                    <tr>
                       <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #ff0000;  line-height: 18px;  vertical-align: top; padding:10px 0;" class="article">
-                        Beats Studio Over-Ear Headphones
+                      ${invoiceData?.customerModel}
                       </td>
-                      <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #646a6e;  line-height: 18px;  vertical-align: top; padding:10px 0;"><small>MH792AM/A</small></td>
-                      <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #646a6e;  line-height: 18px;  vertical-align: top; padding:10px 0;" align="center">1</td>
-                      <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #1e2b33;  line-height: 18px;  vertical-align: top; padding:10px 0;" align="right">$299.95</td>
+                      <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #646a6e;  line-height: 18px;  vertical-align: top; padding:10px 0;"><small>${invoiceData?.customerBrand}</small></td>
+                      <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #646a6e;  line-height: 18px;  vertical-align: top; padding:10px 0;" align="center">${invoiceData?.customerCategory}</td>
+                      <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #1e2b33;  line-height: 18px;  vertical-align: top; padding:10px 0;" align="right">₹ : ${invoiceData?.customerPrice}</td>
                     </tr>
                     <tr>
                       <td height="1" colspan="4" style="border-bottom:1px solid #e4e4e4"></td>
                     </tr>
-                    <tr>
-                      <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #ff0000;  line-height: 18px;  vertical-align: top; padding:10px 0;" class="article">Beats RemoteTalk Cable</td>
-                      <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #646a6e;  line-height: 18px;  vertical-align: top; padding:10px 0;"><small>MHDV2G/A</small></td>
-                      <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #646a6e;  line-height: 18px;  vertical-align: top; padding:10px 0;" align="center">1</td>
-                      <td style="font-size: 12px; font-family: 'Open Sans', sans-serif; color: #1e2b33;  line-height: 18px;  vertical-align: top; padding:10px 0;" align="right">$29.95</td>
-                    </tr>
-                    <tr>
-                      <td height="1" colspan="4" style="border-bottom:1px solid #e4e4e4"></td>
-                    </tr>
+                  
+              
                   </tbody>
                 </table>
               </td>
@@ -547,7 +553,7 @@ export const getInvoice = async (req, res, next) => {
 </table>
        <!-- Add more invoice details here -->`;
 
-    const options = {
+    const optionss = {
       format: "A4",
     };
     // const options = {
@@ -568,7 +574,7 @@ export const getInvoice = async (req, res, next) => {
     // };
 
     const file = { content: htmlContent };
-    const pdfBuffer = await generatePdf(file, options);
+    const pdfBuffer = await generatePdf(file, optionss);
 
     // Set response headers for PDF download
     res.setHeader("Content-Type", "application/pdf");
@@ -598,7 +604,9 @@ export const getJobCard = async (req, res, next) => {
       return res.status(404).json({ error: "Item not found" });
     }
     const currentDate = new Date();
-    const formattedDate = `${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear()}`;
+    const formattedDate = `${currentDate.getDate()}/${
+      currentDate.getMonth() + 1
+    }/${currentDate.getFullYear()}`;
 
     const invoiceData = {
       // ... fetch invoice data based on req.params.id
@@ -612,8 +620,9 @@ export const getJobCard = async (req, res, next) => {
       customerCategory: itemTofind?.category,
       customerCondition: itemTofind?.condition,
       customerPlace: itemTofind?.place,
+      customerPrice: itemTofind?.price,
       customerdeliveryOption: itemTofind?.deliveryOption,
-      currentdate: formattedDate
+      currentdate: formattedDate,
     };
 
     const htmlContent = `
