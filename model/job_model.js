@@ -40,7 +40,6 @@ const JobSchema = new mongoose.Schema(
     },
     place: {
       type: String,
-      require: true,
     },
     ime: {
       type: String,
