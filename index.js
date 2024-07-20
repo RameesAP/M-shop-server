@@ -3,7 +3,13 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from 'url';
 dotenv.config();
+
+// Define __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(morgan("dev"));
@@ -20,6 +26,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/technician", technicianRoutes);
 
+
 //middleware
 
 app.use((error, req, res, next) => {
@@ -32,6 +39,8 @@ app.use((error, req, res, next) => {
   });
 });
 
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
 // DB Connect
 mongoose
   .connect(process.env.MONGO)
@@ -41,6 +50,6 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT||5000, () => {
   console.log("Server is running on port 5000!");
 });

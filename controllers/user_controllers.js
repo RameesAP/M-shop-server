@@ -4,6 +4,13 @@ import { generatePdf } from "html-pdf-node";
 import { Readable } from "stream";
 import { createReadStream } from "fs";
 import { join } from "path";
+// import logo from "../utils/images/Logo.png"
+// const logo = `/static/images/Logo.png`;
+
+// const logo = `/static/Logo.png`;
+
+
+
 
 const options = { format: "A4" };
 
@@ -140,7 +147,271 @@ export const getInvoice = async (req, res, next) => {
       currentdate: formattedDate,
     };
 
+    const logoUrl = '/static/images/Logo.png';
+
     // Replace the following HTML content with your actual invoice template
+
+    const htmlContent1 = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Invoice</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Roboto Condensed', sans-serif;
+            }
+  
+    
+            .border {
+                background-color: white;
+                width: 19cm;
+                margin-left: 1cm;
+                margin-top: 1cm;
+                margin-bottom: 1cm;
+                border-color: teal;
+                border-width: 1px;
+                border-style: solid;
+            }
+    
+            .parent-border {
+                background-color: white;
+                width: 21cm;
+                height: auto;
+                border-color: teal;
+                border-width: 1px;
+                border-style: solid;
+            }
+    
+            .table-row-border > th {
+                border-left-color: white;
+                border-right-color: white;
+                border-bottom-color: teal;
+                border-top-color: teal;
+                border-width: 2px;
+                border-style: solid;
+                margin: 0;
+                padding: 0;
+                width: 4cm;
+                height: 1cm;
+                text-align: center;
+                color: teal;
+            }
+    
+            td {
+                height: 1cm;
+                text-align: center;
+            }
+    
+            .table-addresses > th {
+                color: teal;
+                text-align: center;
+                width: 4cm;
+                text-align: left;
+            }
+    
+            table.invoice-table-address {
+                margin-left: 1cm;
+            }
+    
+            table.invoice-table-address td {
+                font-size: 15px;
+                text-align: left;
+                height: 0.5cm;
+            }
+    
+            .parent {
+                position: relative;
+            }
+    
+            .child {
+                position: absolute;
+            }
+    
+            .invoice-table {
+                margin-left: 1cm;
+                margin-right: 1cm;
+            }
+    
+            .parent-invoice-logo-type {
+                height: 3cm;
+            }
+    
+            .parent-invoice-table-address {
+                margin-top: 1cm;
+                height: 4cm;
+            }
+    
+            .parent-invoice-table {
+                margin-top: 1cm;
+            }
+    
+            .parent-invoice-total {
+                margin-top: 1cm;
+                height: 1cm;
+            }
+    
+            .parent-invoice-terms {
+                margin-top: 4cm;
+                height: 5cm;
+            }
+    
+            .invoice-type {
+                font-size: 50px;
+                font-weight: 700;
+                color: teal;
+                left: 1cm;
+                bottom: 0cm;
+            }
+    
+            .invoice-logo {
+                right: 1cm;
+                bottom: 0cm;
+            }
+    
+            .invoice-total-text {
+                font-size: 30px;
+                font-weight: 700;
+                color: teal;
+                left: 1cm;
+                bottom: 0cm;
+            }
+    
+            .invoice-total {
+                right: 1cm;
+                bottom: 0cm;
+                font-size: 30px;
+                font-weight: 700;
+            }
+    
+            .invoice-terms {
+                left: 1cm;
+                bottom: 0cm;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="parent-border">
+            <div class="border">
+                <div class="parent parent-invoice-logo-type">
+                    <span class="invoice-type child">INVOICE</span>
+                    <img class="invoice-logo child" src="${logoUrl}" alt="" width="100" height="100">
+                </div>
+                <div class="parent parent-invoice-table-address">
+                    <table class="child invoice-table-address" style="border-spacing: 0;">
+                        <tr class="table-addresses">
+                            <th>FROM</th>
+                            <th>BILL TO</th>
+                            <th>SHIP TO</th>
+                            <th>INVOICE</th>
+                        </tr>
+                        <tr class="temp">
+                            <td>M-Tech </td>
+                            <td> ${invoiceData.customerName}</td>
+                            <td>JARSH COMPLEX</td>
+                            <td>INVOICE</td>
+                        </tr>
+                        <tr>
+                            <td>H.No: 18-A-37WP</td>
+                            <td>H.No: 13-26/4</td>
+                            <td>H.No: 13-26/4</td>
+                            <td>Invoice number: ${invoiceData.customerOrderNo}</td>
+                        </tr>
+                        <tr>
+                            <td>Hyderabad </td>
+                            <td>Mumbai</td>
+                            <td>Mumbai</td>
+                            <td>Date: ${formattedDate}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="parent parent-invoice-table">
+                    <table class="invoice-table" style="border-spacing: 0;">
+                        <tr class="table-row-border">
+                            <th>ITEM</th>
+                            <th>BRAND</th>
+                            <th>CATEGORY</th>
+                          
+                           
+                            <th>PRICE</th>
+                        </tr>
+                        <tr>
+                            <td>${invoiceData?.customerModel}</td>
+                            <td>${invoiceData?.customerBrand}</td>
+                            <td>${invoiceData?.customerCategory}</td>
+                           
+                          
+                            <td>₹ : ${invoiceData?.customerPrice}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            
+                          
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                           
+                        
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                           
+                          
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                           
+                          
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          
+                          
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="parent parent-invoice-total">
+                    <span class="invoice-total-text child">TOTAL :</span>
+                    <span class="invoice-total child">RS: ${invoiceData?.customerPrice}/-</span>
+                </div>
+                <div class="parent parent-invoice-terms">
+                    <div class="child invoice-terms">
+                        <h4>TERMS AND CONDITIONS</h4>
+                        <p>Payment is due within 15 days</p>
+                        <p>State bank of india</p>
+                        <p>Account number: XXXXXX123565</p>
+                        <p>IFSC: 000345432</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+
     const htmlContent = `
    
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -180,7 +451,7 @@ export const getInvoice = async (req, res, next) => {
 
 
 <!-- Header -->
-<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="fullTable" bgcolor="#e1e1e1">
+<table  width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="fullTable" bgcolor="#e1e1e1">
   <tr>
     <td height="20"></td>
   </tr>
@@ -196,7 +467,7 @@ export const getInvoice = async (req, res, next) => {
 
         <tr>
           <td>
-            <table width="480" border="0" cellpadding="0" cellspacing="0" align="center" class="fullPadding">
+            <table  width="480" border="0" cellpadding="0" cellspacing="0" align="center" class="fullPadding">
               <tbody>
                 <tr>
                   <td>
@@ -409,10 +680,11 @@ export const getInvoice = async (req, res, next) => {
     <td height="20"></td>
   </tr>
 </table>
-       <!-- Add more invoice details here -->`;
+       <!-- Add more invoice details here -->
+       `;
 
     const optionss = {
-      // format: "A4",
+      format: "A4",
     };
     // const options = {
     //   margin: {
@@ -431,7 +703,8 @@ export const getInvoice = async (req, res, next) => {
     //   zoomFactor: 5.0, // Adjust the zoom factor as needed
     // };
 
-    const file = { content: htmlContent };
+    // const file = { content: htmlContent };
+    const file = { content: htmlContent1 };
     const pdfBuffer = await generatePdf(file, optionss);
 
     // Set response headers for PDF download
