@@ -50,6 +50,11 @@ const JobSchema = new mongoose.Schema(
       enum: ["direct", "courier"], // Enumerated values for delivery options
       required: true,
     },
+    shopOrPerson: {
+      type: String,
+      enum: ["PERSON", "SHOP"],
+      required: true,
+    },
     password: {
       type: String,
       require: true,
@@ -69,11 +74,9 @@ const JobSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-     
     },
     technician_name: {
       type: String,
-     
     },
   },
   { timestamps: true }

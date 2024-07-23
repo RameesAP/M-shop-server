@@ -21,6 +21,7 @@ export const test = (req, res) => {
 };
 
 export const createJob = async (req, res, next) => {
+  console.log("this the body :",req.body);
   const newJob = new JobModel(req.body);
   try {
     const jobSaved = await newJob.save();
