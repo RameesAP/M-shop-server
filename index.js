@@ -53,7 +53,7 @@ mongoose
   .connect(process.env.MONGO,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 30000, // Increase timeout to 30 seconds
+    serverSelectionTimeoutMS: 90000, // Increase timeout to 30 seconds
   })
   .then(() => {
     console.log("Connected to Mongo DB!!");
@@ -62,7 +62,7 @@ mongoose
     console.log(error);
   });
 
-
+//5000 port
 app.listen(process.env.PORT||10000, () => {
   console.log("Server is running on port 5000!");
 });
