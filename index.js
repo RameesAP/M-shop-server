@@ -51,8 +51,8 @@ app.use('/static', express.static(path.join(__dirname, 'public')));
 // DB Connect
 mongoose
   .connect(process.env.MONGO,{
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
     serverSelectionTimeoutMS: 90000, // Increase timeout to 30 seconds
   })
   .then(() => {
