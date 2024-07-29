@@ -5,6 +5,7 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from 'url';
+import cors from "cors";
 dotenv.config();
 
 // Define __dirname in ES modules
@@ -15,6 +16,11 @@ const app = express();
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
+
+// Enable CORS
+app.use(cors({
+  origin: '*',
+}));
 
 // import routes
 import userRoutes from "./routes/user_route.js";
