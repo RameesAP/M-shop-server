@@ -47,6 +47,7 @@ app.use((error, req, res, next) => {
 
 app.use('/static', express.static(path.join(__dirname, 'public')));
 
+
 // DB Connect
 mongoose
   .connect(process.env.MONGO,{
@@ -60,6 +61,8 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
-app.listen(process.env.PORT||5000, () => {
+
+
+app.listen(process.env.PORT||10000, () => {
   console.log("Server is running on port 5000!");
 });
