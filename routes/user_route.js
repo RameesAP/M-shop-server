@@ -8,6 +8,7 @@ import {
   getAllData,
   getInvoice,
   getJobCard,
+  getSearchResult,
   test,
 } from "../controllers/user_controllers.js";
 
@@ -22,5 +23,6 @@ router.put("/editsingleitem/:id", EditSingleItem);
 router.get("/checkUser/:number", checkUser);
 router.get("/getinvoice/:id",getInvoice)
 router.get("/getjobcard/:id",getJobCard)
+router.get("/get/searchresult",getSearchResult)
 
 export default router;

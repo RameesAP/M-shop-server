@@ -9,9 +9,6 @@ import { join } from "path";
 
 // const logo = `/static/Logo.png`;
 
-
-
-
 const options = { format: "A4" };
 
 export const test = (req, res) => {
@@ -21,7 +18,7 @@ export const test = (req, res) => {
 };
 
 export const createJob = async (req, res, next) => {
-  console.log("this the body :",req.body);
+  console.log("this the body :", req.body);
   const newJob = new JobModel(req.body);
   try {
     const jobSaved = await newJob.save();
@@ -148,7 +145,7 @@ export const getInvoice = async (req, res, next) => {
       currentdate: formattedDate,
     };
 
-    const logoUrl = '/static/images/Logo.png';
+    const logoUrl = "/static/images/Logo.png";
 
     // Replace the following HTML content with your actual invoice template
 
@@ -948,5 +945,106 @@ export const getJobCard = async (req, res, next) => {
   } catch (error) {
     console.error("Error generating getJobCard:", error);
     res.status(500).send("Internal Server Error");
+  }
+};
+
+// export const getSearchResult = async (req, res) => {
+//   try {
+//     console.log("this is the query : ", req.query);
+
+//     const {
+//       username,
+//       address,
+//       problem,
+//       brand,
+//       model,
+//       category,
+//       condition,
+//       ime,
+//       remark,
+//       jobsheetno,
+//     } = req.query;
+
+//     const searchCriteria = [];
+
+//     if (username)
+//       searchCriteria.push({ username: { $regex: username, $options: "i" } });
+//     if (address)
+//       searchCriteria.push({ address: { $regex: address, $options: "i" } });
+//     if (problem)
+//       searchCriteria.push({ problem: { $regex: problem, $options: "i" } });
+//     if (brand) searchCriteria.push({ brand: { $regex: brand, $options: "i" } });
+//     if (model) searchCriteria.push({ model: { $regex: model, $options: "i" } });
+//     if (category)
+//       searchCriteria.push({ category: { $regex: category, $options: "i" } });
+//     if (condition)
+//       searchCriteria.push({ condition: { $regex: condition, $options: "i" } });
+//     if (ime) searchCriteria.push({ ime: { $regex: ime, $options: "i" } });
+//     if (remark)
+//       searchCriteria.push({ remark: { $regex: remark, $options: "i" } });
+//     if (jobsheetno && !isNaN(jobsheetno))
+//       searchCriteria.push({ jobsheetno: parseInt(jobsheetno, 10) });
+
+//     if (searchCriteria.length === 0) {
+//       return res
+//         .status(400)
+//         .json({ message: "At least one query parameter is required" });
+//     }
+
+//     // Perform the search in the MongoDB collection
+//     const searchResults = await JobModel.find({ $or: searchCriteria });
+
+//     // Return the search results
+//     res.status(200).json({ results: searchResults });
+//   } catch (error) {
+//     console.error("Error in getSearchResult:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// };
+
+
+export const getSearchResult = async (req, res) => {
+  try {
+    // console.log('this is the query : ', req.query);
+
+    const { jobsheetno, number } = req.query;
+
+    // Initialize search criteria object
+    const searchCriteria = {};
+
+    // Handle searches based on username
+    // if (username) {
+    //   searchCriteria.username = { $regex: username, $options: 'i' };
+    // }
+
+    // Handle searches based on jobsheetno
+    if (jobsheetno) {
+      const jobsheetnoNumber = parseInt(jobsheetno, 10);
+      if (!isNaN(jobsheetnoNumber)) {
+        searchCriteria.jobsheetno = jobsheetnoNumber;
+      }
+    }
+
+    // Handle searches based on number
+    if (number) {
+      const numberValue = parseInt(number, 10);
+      if (!isNaN(numberValue)) {
+        searchCriteria.number = numberValue;
+      }
+    }
+
+    // If no search criteria, return an error
+    if (Object.keys(searchCriteria).length === 0) {
+      return res.status(400).json({ message: 'At least one valid query parameter is required' });
+    }
+
+    // Perform the search in the MongoDB collection
+    const searchResults = await JobModel.find(searchCriteria);
+
+    // Return the search results
+    res.status(200).json({ results: searchResults });
+  } catch (error) {
+    console.error('Error in getSearchResult:', error);
+    res.status(500).send('Internal Server Error');
   }
 };

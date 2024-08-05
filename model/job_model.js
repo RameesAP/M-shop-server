@@ -109,3 +109,4 @@ JobSchema.pre("save", async function (next) {
 const JobModel = mongoose.model("Job", JobSchema);
 
 export default JobModel;
+
